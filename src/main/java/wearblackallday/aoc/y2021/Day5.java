@@ -23,33 +23,18 @@ public class Day5 extends Calendar.Day {
 
 	@Override
 	protected long partOne() {
-		int[][] diagram = new int[this.maxX + 1][this.maxY + 1];
-
-		for(int[] vent : this.vents) {
-			if(vent[0] == vent[2]) {
-				for(int y = min(vent[1], vent[3]); y <= max(vent[1], vent[3]); y++) {
-					diagram[vent[0]][y]++;
-				}
-				continue;
-			}
-			if(vent[1] == vent[3]) {
-				for(int x = min(vent[0], vent[2]); x <= max(vent[0], vent[2]); x++) {
-					diagram[x][vent[1]]++;
-				}
-			}
-
-		}
-		return (int)Arrays.stream(diagram)
-			.flatMapToInt(Arrays::stream)
-			.filter(i -> i >= 2)
-			.count();
+		return this.countOverlaps(this.vents, false);
 	}
 
 	@Override
 	protected long partTwo() {
+		return this.countOverlaps(this.vents, true);
+	}
+
+	private long countOverlaps(int[][] vents, boolean includeDiagonals) {
 		int[][] diagram = new int[this.maxX + 1][this.maxY + 1];
 
-		for(int[] vent : this.vents) {
+		for(int[] vent : vents) {
 			if(vent[0] == vent[2]) { //vertical
 				for(int y = min(vent[1], vent[3]); y <= max(vent[1], vent[3]); y++) {
 					diagram[vent[0]][y]++;
@@ -58,7 +43,7 @@ public class Day5 extends Calendar.Day {
 				for(int x = min(vent[0], vent[2]); x <= max(vent[0], vent[2]); x++) {
 					diagram[x][vent[1]]++;
 				}
-			} else if(Math.abs(vent[0] - vent[2]) == Math.abs(vent[1] - vent[3])) { //diagonal
+			} else if(includeDiagonals && Math.abs(vent[0] - vent[2]) == Math.abs(vent[1] - vent[3])) { //diagonal
 				if(vent[0] > vent[2]) {
 					vent[0] = vent[0] ^ vent[2];
 					vent[2] = vent[0] ^ vent[2];
@@ -74,7 +59,7 @@ public class Day5 extends Calendar.Day {
 			}
 
 		}
-		return (int)Arrays.stream(diagram)
+		return Arrays.stream(diagram)
 			.flatMapToInt(Arrays::stream)
 			.filter(i -> i >= 2)
 			.count();

@@ -2,7 +2,6 @@ package wearblackallday.aoc.y2021;
 
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
-import java.util.stream.IntStream;
 
 public class Day7 extends Calendar.Day {
 	private final int[] crabs = this.parseInts(this.input[0].split(","));
@@ -33,7 +32,8 @@ public class Day7 extends Calendar.Day {
 		for(int horizontal = this.min; horizontal <= this.max; horizontal++) {
 			int fuelCost = 0;
 			for(int crab : this.crabs) {
-				fuelCost += IntStream.rangeClosed(1, Math.abs(crab - horizontal)).sum();
+				int distance = Math.abs(crab - horizontal);
+				fuelCost += distance * ++distance >> 1;
 			}
 			lowestCost = Math.min(fuelCost, lowestCost);
 		}
