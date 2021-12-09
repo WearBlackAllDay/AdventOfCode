@@ -27,8 +27,8 @@ public class Day1 extends Calendar.Day {
 	}
 
 	private int getTripleSum(int index) {
-		return this.data[index] +
-			this.data[++index] +
-			this.data[++index];
+		return this.data[index]
+			 + this.data[++index]
+			 + this.data[++index];
 	}
 }
