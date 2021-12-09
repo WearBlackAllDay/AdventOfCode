@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Day6 extends Calendar.Day {
 	private final int[] population = this.parseInts(this.input[0].split(","));
-	private static final int[][] MARKOV_MATRIX = {
+	private static final int[][] TRANSITION_MATRIX = {
 		{0, 1, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 1, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 1, 0, 0, 0, 0, 0},
@@ -31,7 +31,7 @@ public class Day6 extends Calendar.Day {
 		for(int fish : population) {
 			distribution[fish]++;
 		}
-		return Arrays.stream(matrixVectorProduct(matrixPower(MARKOV_MATRIX, days - 1), distribution)).sum();
+		return Arrays.stream(matrixVectorProduct(matrixPower(TRANSITION_MATRIX, days - 1), distribution)).sum();
 	}
 
 	private static long[] matrixVectorProduct(int[][] matrix, long[] vector) {
@@ -46,7 +46,7 @@ public class Day6 extends Calendar.Day {
 		return result;
 	}
 
-	private static int[][] multiplyMatrix(int matrix1[][], int matrix2[][]) {
+	private static int[][] matrixMultiply(int matrix1[][], int matrix2[][]) {
 		int size = matrix1.length;
 		int matrix3[][] = new int[size][size];
 		for (int x = 0; x < size; x++) {
@@ -64,10 +64,10 @@ public class Day6 extends Calendar.Day {
 		int[][] result = matrix;
 		while(n > 0) {
 			if((n & 1) == 1) {
-				result = multiplyMatrix(result, matrix);
+				result = matrixMultiply(result, matrix);
 			}
 			n >>= 1;
-			matrix = multiplyMatrix(matrix, matrix);
+			matrix = matrixMultiply(matrix, matrix);
 		}
 		return result;
 	}
