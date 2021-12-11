@@ -6,7 +6,7 @@ import java.util.function.ToIntFunction;
 
 public class Calendar {
 	public static void main(String[] args) {
-		new Day2().printResults();
+		new Day3().printResults();
 	}
 
 	protected static abstract class Day {
