@@ -12,12 +12,13 @@ public class Day10 extends Calendar.Day {
 		for(String line : this.input) {
 			Deque<Character> closers = new ArrayDeque<>();
 			for(int i = 0; i < line.length(); i++) {
-				switch(line.charAt(i)) {
+				char c = line.charAt(i);
+				switch(c) {
 					case '(' -> closers.push(')'); //'(' + 2 == '*' smh
-					case '[', '{', '<' -> closers.push((char)(line.charAt(i) + 2));
+					case '[', '{', '<' -> closers.push((char)(c + 2));
 					case ')', ']', '}', '>' -> {
-						if(closers.pop() != line.charAt(i)) {
-							errorSum += switch(line.charAt(i)) {
+						if(closers.pop() != c) {
+							errorSum += switch(c) {
 								case ')' -> 3;
 								case ']' -> 57;
 								case '}' -> 1197;
@@ -30,14 +31,8 @@ public class Day10 extends Calendar.Day {
 				}
 			}
 			this.incompleteSums.add(closers.stream()
-				.mapToLong(closer -> switch(closer) {
-					case ')' -> 1L;
-					case ']' -> 2L;
-					case '}' -> 3L;
-					case '>' -> 4L;
-					default -> 0;
-				})
-				.reduce(0, (a, b) -> a * 5 + b));
+				.mapToLong(closer -> (closer & 2) << 1 | (closer & 96) >> 5 ^ (closer & 2) >> 1)
+				.reduce(0L, (a, b) -> a * 5 + b));
 		}
 		return errorSum;
 	}
