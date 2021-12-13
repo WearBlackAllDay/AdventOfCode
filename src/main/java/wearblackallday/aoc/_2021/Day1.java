@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 public class Day1 extends Calendar.Day {
 	private final int[] data = this.parseInts(this.input);

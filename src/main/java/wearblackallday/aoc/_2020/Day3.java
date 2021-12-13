@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2020;
+package wearblackallday.aoc._2020;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;

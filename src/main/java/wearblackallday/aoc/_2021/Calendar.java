@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

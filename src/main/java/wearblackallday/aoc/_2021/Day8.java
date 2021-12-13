@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 import java.util.*;
 import java.util.stream.Collectors;

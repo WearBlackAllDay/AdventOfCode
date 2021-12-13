@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 public class Day2 extends Calendar.Day {
 

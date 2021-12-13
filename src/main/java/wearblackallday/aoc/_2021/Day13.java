@@ -1,8 +1,9 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -12,18 +13,17 @@ public class Day13 extends Calendar.Day {
 		.filter(line -> !line.isEmpty() && line.charAt(0) != 'f')
 		.map(s -> new Point(parseInt(s.substring(0, s.indexOf(','))), parseInt(s.substring(s.indexOf(',') + 1))))
 		.collect(Collectors.toSet());
-	private final String[] folds = new String[this.input.length - this.paper.size() - 1];
-	{System.arraycopy(this.input, this.paper.size() + 1, this.folds, 0, this.folds.length);}
+	private final Spliterator<String> folds = Arrays.spliterator(this.input, this.paper.size() + 1, this.input.length);
 
 	@Override
 	protected long partOne() {
-		this.fold(this.folds[0]);
+		this.folds.tryAdvance(this::fold);
 		return this.paper.size();
 	}
 
 	@Override
 	protected long partTwo() {
-		Arrays.stream(this.folds).skip(1).forEach(this::fold);
+		this.folds.forEachRemaining(this::fold);
 		int width = 0, height = 0;
 		for(Point point : this.paper) {
 			width = Math.max(point.x, width);

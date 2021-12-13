@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2020;
+package wearblackallday.aoc._2020;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -6,7 +6,7 @@ import java.util.function.ToIntFunction;
 
 public class Calendar {
 	public static void main(String[] args) {
-		new Day3().printResults();
+		new Day4().printResults();
 	}
 
 	protected static abstract class Day {

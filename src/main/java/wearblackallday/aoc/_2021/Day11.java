@@ -1,4 +1,4 @@
-package wearblackallday.aoc.y2021;
+package wearblackallday.aoc._2021;
 
 import java.util.Arrays;
 import java.util.BitSet;
