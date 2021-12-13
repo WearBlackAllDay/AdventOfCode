@@ -3,7 +3,7 @@ package wearblackallday.aoc._2021;
 public class Day1 extends Calendar.Day {
 	private final int[] data = this.parseInts(this.input);
 
-	@Override
+	@Override //1288
 	protected long partOne() {
 		int measurements = 0, prev = 0;
 
@@ -14,7 +14,7 @@ public class Day1 extends Calendar.Day {
 		return --measurements;
 	}
 
-	@Override
+	@Override //1311
 	protected long partTwo() {
 		int measurements = 0, prevTriple = 0;
 

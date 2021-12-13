@@ -16,12 +16,12 @@ public class Day6 extends Calendar.Day {
 		{1, 0, 0, 0, 0, 0, 0, 0, 0},
 	};
 
-	@Override
+	@Override //359344
 	protected long partOne() {
 		return populationGrowth(this.population, 80);
 	}
 
-	@Override
+	@Override //1629570219571
 	protected long partTwo() {
 		return populationGrowth(this.population, 256);
 	}

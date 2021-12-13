@@ -14,13 +14,13 @@ public class Day12 extends Calendar.Day {
 			Collectors.mapping(SimpleEntry::getValue, Collectors.toSet())));
 	private int totalPaths = 0;
 
-	@Override
+	@Override //4186
 	protected long partOne() {
 		this.walkPath("start", new ArrayList<>(), false);
 		return this.totalPaths;
 	}
 
-	@Override
+	@Override //92111
 	protected long partTwo() {
 		this.totalPaths = 0;
 		this.walkPath("start", new ArrayList<>(), true);

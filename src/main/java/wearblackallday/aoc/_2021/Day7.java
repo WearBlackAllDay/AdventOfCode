@@ -14,7 +14,7 @@ public class Day7 extends Calendar.Day {
 	}
 
 	@Override
-	protected long partOne() {
+	protected long partOne() { //353800
 		int lowestCost = Integer.MAX_VALUE;
 		for(int horizontal = this.min; horizontal <= this.max; horizontal++) {
 			int fuelCost = 0;
@@ -26,7 +26,7 @@ public class Day7 extends Calendar.Day {
 		return lowestCost;
 	}
 
-	@Override
+	@Override //98119739
 	protected long partTwo() {
 		int lowestCost = Integer.MAX_VALUE;
 		for(int horizontal = this.min; horizontal <= this.max; horizontal++) {

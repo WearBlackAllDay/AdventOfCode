@@ -15,13 +15,13 @@ public class Day13 extends Calendar.Day {
 		.collect(Collectors.toSet());
 	private final Spliterator<String> folds = Arrays.spliterator(this.input, this.paper.size() + 1, this.input.length);
 
-	@Override
+	@Override //669
 	protected long partOne() {
 		this.folds.tryAdvance(this::fold);
 		return this.paper.size();
 	}
 
-	@Override
+	@Override //UEFZCUCJ (ascii art)
 	protected long partTwo() {
 		this.folds.forEachRemaining(this::fold);
 		int width = 0, height = 0;

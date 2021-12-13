@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class Day3 extends Calendar.Day {
 
-	@Override
+	@Override //4138664
 	protected long partOne() {
 		int[] setBits = new int[this.input[0].length()];
 		for(String line : this.input) {
@@ -25,7 +25,7 @@ public class Day3 extends Calendar.Day {
 		return gamma * epsilon;
 	}
 
-	@Override
+	@Override //4273224
 	protected long partTwo() {
 		Set<String> oxygenValues = new HashSet<>(Arrays.asList(this.input));
 		Set<String> carbonValues = new HashSet<>(Arrays.asList(this.input));

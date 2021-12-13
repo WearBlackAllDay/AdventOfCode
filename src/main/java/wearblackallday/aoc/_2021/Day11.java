@@ -1,16 +1,19 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.common.Grid;
+
 import java.util.Arrays;
 import java.util.BitSet;
 
-public class Day11 extends Calendar.Day {
-	private final int[][] energy = Arrays.stream(this.input)
-		.map(line -> this.parseInts(line.split("")))
-		.toArray(int[][]::new);
-	private final BitSet flashes = new BitSet(this.energy.length * this.energy[0].length);
+public class Day11 extends Calendar.Day implements Grid {
+	private final int[] energy = Arrays.stream(this.input)
+		.flatMapToInt(line -> Arrays.stream(this.parseInts(line.split(""))))
+		.toArray();
+	private final BitSet flashes = new BitSet(this.size());
 
 
-	@Override
+
+	@Override //1644
 	protected long partOne() {
 		int totalFlashes = 0;
 		for(int step = 0; step < 100; step++) {
@@ -19,10 +22,10 @@ public class Day11 extends Calendar.Day {
 		return totalFlashes;
 	}
 
-	@Override
+	@Override //229
 	protected long partTwo() {
 		int step = 1;
-		while(this.nextStep() < this.energy.length * this.energy[0].length) {
+		while(this.nextStep() < this.size()) {
 			step++;
 		}
 		return step + 100;
@@ -30,35 +33,28 @@ public class Day11 extends Calendar.Day {
 
 	private int nextStep() {
 		this.flashes.clear();
-		for(int y = 0; y < this.energy.length; y++) {
-			for(int x = 0; x < this.energy[0].length; x++) {
-				this.tryFlash(x, y);
-			}
-		}
+		this.forEach(this::tryFlash);
 		return this.flashes.cardinality();
 	}
 
 	private void tryFlash(int x, int y) {
-		if(x >= 0 && x < this.energy[0].length && y >= 0 && y < this.energy.length) {
-			if(this.flashes.get(this.toIndex(x, y)) || ++this.energy[x][y] <= 9) return;
+		if(this.inBounds(x, y)) {
+			if(this.flashes.get(this.toIndex(x, y)) || ++this.energy[this.toIndex(x, y)] <= 9) return;
 
-			this.energy[x][y] = 0;
+			this.energy[this.toIndex(x, y)] = 0;
 			this.flashes.set(this.toIndex(x, y));
 
-			this.tryFlash(x + 1, y);
-			this.tryFlash(x - 1, y);
-
-			this.tryFlash(x + 1, y + 1);
-			this.tryFlash(x, y + 1);
-			this.tryFlash(x - 1, y + 1);
-
-			this.tryFlash(x + 1, y - 1);
-			this.tryFlash(x, y - 1);
-			this.tryFlash(x - 1, y - 1);
+			this.forAdjacent(x, y, this::tryFlash);
 		}
 	}
 
-	private int toIndex(int x, int y) {
-		return x + this.energy[0].length * y;
+	@Override
+	public int width() {
+		return this.input[0].length();
+	}
+
+	@Override
+	public int height() {
+		return this.input.length;
 	}
 }

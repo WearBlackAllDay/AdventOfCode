@@ -5,7 +5,7 @@ import java.util.*;
 public class Day10 extends Calendar.Day {
 	private final List<Long> incompleteSums = new ArrayList<>();
 
-	@Override
+	@Override //367059
 	protected long partOne() {
 		int errorSum = 0;
 		main:
@@ -37,7 +37,7 @@ public class Day10 extends Calendar.Day {
 		return errorSum;
 	}
 
-	@Override
+	@Override //1952146692
 	protected long partTwo() {
 		Collections.sort(this.incompleteSums);
 		return this.incompleteSums.get(this.incompleteSums.size() >> 1);

@@ -2,66 +2,73 @@ package wearblackallday.aoc._2021;
 
 import java.util.Arrays;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 public class Day5 extends Calendar.Day {
-	private final int[][] vents = Arrays.stream(this.input)
-		.map(line -> this.parseInts(line.split("\s->\s|,")))
-		.toArray(int[][]::new);
-	private final int maxX, maxY;
+	private final Vent[] vents = Arrays.stream(this.input)
+		.map(Vent::new)
+		.toArray(Vent[]::new);
+	private final int width, height;
 
 	public Day5() {
 		int maxX = 0, maxY = 0;
-		for(int[] vent : this.vents) {
-			maxX = max(maxX, max(vent[0], vent[2]));
-			maxY = max(maxY, max(vent[1], vent[3]));
+		for(Vent vent : this.vents) {
+			maxX = max(maxX, max(vent.x1, vent.y1));
+			maxY = max(maxY, max(vent.x2, vent.y2));
 		}
-		this.maxX = maxX;
-		this.maxY = maxY;
+		this.width = maxX + 1;
+		this.height = maxY + 1;
 	}
 
-	@Override
+	@Override //4745
 	protected long partOne() {
-		return this.countOverlaps(this.vents, false);
+		return this.countOverlaps(false);
 	}
 
-	@Override
+	@Override //18442
 	protected long partTwo() {
-		return this.countOverlaps(this.vents, true);
+		return this.countOverlaps(true);
 	}
 
-	private long countOverlaps(int[][] vents, boolean includeDiagonals) {
-		int[][] diagram = new int[this.maxX + 1][this.maxY + 1];
+	private long countOverlaps(boolean includeDiagonals) {
+		int[] diagram = new int[this.width * this.height];
 
-		for(int[] vent : vents) {
-			if(vent[0] == vent[2]) { //vertical
-				for(int y = min(vent[1], vent[3]); y <= max(vent[1], vent[3]); y++) {
-					diagram[vent[0]][y]++;
+		for(Vent vent : this.vents) {
+			if(vent.x1 == vent.y1) { //vertical
+				for(int y = min(vent.x2, vent.y2); y <= max(vent.x2, vent.y2); y++) {
+					diagram[this.toIndex(vent.x1, y)]++;
 				}
-			} else if(vent[1] == vent[3]) { //horizontal
-				for(int x = min(vent[0], vent[2]); x <= max(vent[0], vent[2]); x++) {
-					diagram[x][vent[1]]++;
+			} else if(vent.x2 == vent.y2) { //horizontal
+				for(int x = min(vent.x1, vent.y1); x <= max(vent.x1, vent.y1); x++) {
+					diagram[this.toIndex(x, vent.x2)]++;
 				}
-			} else if(includeDiagonals && Math.abs(vent[0] - vent[2]) == Math.abs(vent[1] - vent[3])) { //diagonal
-				if(vent[0] > vent[2]) {
-					vent[0] = vent[0] ^ vent[2];
-					vent[2] = vent[0] ^ vent[2];
-					vent[0] = vent[0] ^ vent[2];
-
-					vent[1] = vent[1] ^ vent[3];
-					vent[3] = vent[1] ^ vent[3];
-					vent[1] = vent[1] ^ vent[3];
+			} else if(includeDiagonals && abs(vent.x1 - vent.y1) == abs(vent.x2 - vent.y2)) { //diagonal
+				int x1 = vent.x1, x2 = vent.x2, y1 = vent.y1, y2 = vent.y2;
+				if(vent.x1 > vent.y1) {
+					x1 = vent.y1; y1 = vent.x1;
+					x2 = vent.y2; y2 = vent.x2;
 				}
-				for(int x = vent[0], y = vent[1]; x <= vent[2]; x++, y += Integer.signum(vent[3] - vent[1])) {
-					diagram[x][y]++;
+				for(int x = x1, y = x2; x <= y1; x++, y += Integer.signum(y2 - x2)) {
+					diagram[this.toIndex(x, y)]++;
 				}
 			}
 
 		}
 		return Arrays.stream(diagram)
-			.flatMapToInt(Arrays::stream)
 			.filter(i -> i >= 2)
 			.count();
+	}
+
+	private record Vent(int x1, int x2, int y1, int y2) {
+		private Vent(String line) {
+			this(Integer.parseInt(line.substring(0, line.indexOf(','))), 
+				 Integer.parseInt(line.substring(line.indexOf(',') + 1, line.indexOf(' '))),
+				 Integer.parseInt(line.substring(line.lastIndexOf(' ') + 1, line.lastIndexOf(','))),
+				 Integer.parseInt(line.substring(line.lastIndexOf(',') + 1)));
+		}
+	}
+
+	private int toIndex(int x, int y) {
+		return x + this.width * y;
 	}
 }
