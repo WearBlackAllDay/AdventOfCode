@@ -12,47 +12,41 @@ public class Day15 extends Calendar.Day implements Grid {
 
 	@Override //696
 	protected long partOne() {
-		return this.lowestRiskTraversal(this.cave);
+		return this.aStar(this.cave);
 	}
 
 	@Override //2952
 	protected long partTwo() {
-		this.width *= 5;
-		this.height *= 5;
+		int width = this.width, height = this.height;
+		this.width *= 5; this.height *= 5;
 		int[] bigCave = new int[this.size()];
 
 		for(int x = 0; x < this.width; x++) {
 			for(int y = 0; y < this.height; y++) {
-				bigCave[this.toIndex(x, y)] = this.expand(x, y);
+				bigCave[this.toIndex(x, y)] = (this.cave[x % width + width * (y % height)]
+					+ x / width + y / height - 1) % 9 + 1;
 			}
 		}
-		return this.lowestRiskTraversal(bigCave);
+		return this.aStar(bigCave);
 	}
 
-	private int lowestRiskTraversal(int[] cave) {
-		BitSet visited = new BitSet(this.size());
-		Queue<Chiton> queue = new PriorityQueue<>(Comparator.comparingInt(Chiton::risk));
-		queue.add(new Chiton(0, 0, 0));
+	private int aStar(int[] cave) {
+		BitSet closed = new BitSet(this.size());
+		Queue<Node> open = new PriorityQueue<>(Comparator.comparingInt(node -> node.cost + node.distance));
+		open.add(new Node(0, 0, 0, Integer.MAX_VALUE));
 
 		while(true) {
-			Chiton chiton = queue.poll();
+			Node currentNode = open.poll();
+			if(currentNode.x == this.width - 1 && currentNode.y == this.height - 1) return currentNode.cost;
+			if(closed.get(this.toIndex(currentNode.x, currentNode.y))) continue;
 
-			if(chiton.x == this.width - 1 && chiton.y == this.height - 1) return chiton.risk;
-			visited.set(this.toIndex(chiton.x, chiton.y));
-
-			this.forAdjoining(chiton.x, chiton.y, ((x, y) -> {
-				if(!visited.get(this.toIndex(x, y))) {
-					Chiton newChiton = new Chiton(x, y, chiton.risk + cave[this.toIndex(x, y)]);
-					if(!queue.contains(newChiton)) queue.add(newChiton);
-				}
-			}));
+			closed.set(this.toIndex(currentNode.x, currentNode.y));
+			this.forAdjoining(currentNode.x, currentNode.y, (x, y) -> {
+				if(!closed.get(this.toIndex(x, y))) open.add(new Node(x, y,
+					currentNode.cost + cave[this.toIndex(x, y)],
+					this.height - y + this.width - x));
+			});
 		}
-	}
-
-	private int expand(int x, int y) {
-		int width = this.width / 5, height = this.height / 5;
-		int i = this.cave[(x % width) + width * (y % height)] + x / width + y / height;
-		return i > 9 ? i - 9 : i;
 	}
 
 	@Override
@@ -65,6 +59,5 @@ public class Day15 extends Calendar.Day implements Grid {
 		return this.height;
 	}
 
-	private record Chiton(int x, int y, int risk) {
-	}
+	private record Node(int x, int y, int cost, int distance) {}
 }
