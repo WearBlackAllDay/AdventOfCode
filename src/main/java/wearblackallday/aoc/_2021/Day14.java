@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -12,12 +14,12 @@ public class Day14 extends Calendar.Day {
 		.collect(Collectors.toMap(line -> new Pair(line.charAt(0), line.charAt(1)),
 			line -> new PairPair(new Pair(line.charAt(0), line.charAt(6)), new Pair(line.charAt(6), line.charAt(1)))));
 
-	@Override //3058
+	@Override @Answer(3058)
 	protected long partOne() {
 		return this.buildPolymer(10);
 	}
 
-	@Override //3447389044530
+	@Override @Answer(3447389044530L)
 	protected long partTwo() {
 		return this.buildPolymer(40);
 	}

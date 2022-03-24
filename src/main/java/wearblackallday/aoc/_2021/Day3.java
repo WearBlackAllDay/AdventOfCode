@@ -1,12 +1,14 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Day3 extends Calendar.Day {
 
-	@Override //4138664
+	@Override @Answer(4138664)
 	protected long partOne() {
 		int[] setBits = new int[this.input[0].length()];
 		for(String line : this.input) {
@@ -25,7 +27,7 @@ public class Day3 extends Calendar.Day {
 		return gamma * epsilon;
 	}
 
-	@Override //4273224
+	@Override @Answer(4273224)
 	protected long partTwo() {
 		Set<String> oxygenValues = new HashSet<>(Arrays.asList(this.input));
 		Set<String> carbonValues = new HashSet<>(Arrays.asList(this.input));

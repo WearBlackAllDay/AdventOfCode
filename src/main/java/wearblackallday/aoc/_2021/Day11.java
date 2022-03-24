@@ -1,6 +1,7 @@
 package wearblackallday.aoc._2021;
 
-import wearblackallday.common.Grid;
+import wearblackallday.aoc.common.Answer;
+import wearblackallday.aoc.common.Grid;
 
 import java.util.Arrays;
 import java.util.BitSet;
@@ -11,9 +12,7 @@ public class Day11 extends Calendar.Day implements Grid {
 		.toArray();
 	private final BitSet flashes = new BitSet(this.size());
 
-
-
-	@Override //1644
+	@Override @Answer(1644)
 	protected long partOne() {
 		int totalFlashes = 0;
 		for(int step = 0; step < 100; step++) {
@@ -22,7 +21,7 @@ public class Day11 extends Calendar.Day implements Grid {
 		return totalFlashes;
 	}
 
-	@Override //229
+	@Override @Answer(229)
 	protected long partTwo() {
 		int step = 1;
 		while(this.nextStep() < this.size()) {

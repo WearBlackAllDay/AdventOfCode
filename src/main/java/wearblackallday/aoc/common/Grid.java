@@ -1,4 +1,4 @@
-package wearblackallday.common;
+package wearblackallday.aoc.common;
 
 public interface Grid {
 

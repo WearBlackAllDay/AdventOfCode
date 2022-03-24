@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Set;
@@ -15,7 +17,7 @@ public class Day13 extends Calendar.Day {
 		.collect(Collectors.toSet());
 	private final Spliterator<String> folds = Arrays.spliterator(this.input, this.paper.size() + 1, this.input.length);
 
-	@Override //669
+	@Override @Answer(669)
 	protected long partOne() {
 		this.folds.tryAdvance(this::fold);
 		return this.paper.size();

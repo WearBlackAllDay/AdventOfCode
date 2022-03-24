@@ -1,11 +1,13 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.*;
 
 public class Day10 extends Calendar.Day {
 	private final List<Long> incompleteSums = new ArrayList<>();
 
-	@Override //367059
+	@Override @Answer(367059)
 	protected long partOne() {
 		int errorSum = 0;
 		main:
@@ -37,7 +39,7 @@ public class Day10 extends Calendar.Day {
 		return errorSum;
 	}
 
-	@Override //1952146692
+	@Override @Answer(1952146692)
 	protected long partTwo() {
 		Collections.sort(this.incompleteSums);
 		return this.incompleteSums.get(this.incompleteSums.size() >> 1);

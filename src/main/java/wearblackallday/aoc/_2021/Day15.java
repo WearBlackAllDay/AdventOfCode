@@ -1,21 +1,23 @@
 package wearblackallday.aoc._2021;
 
-import wearblackallday.common.Grid;
+import wearblackallday.aoc.common.Answer;
+import wearblackallday.aoc.common.Grid;
 
 import java.util.*;
 
 public class Day15 extends Calendar.Day implements Grid {
 	private final int[] cave = Arrays.stream(this.input)
-		.flatMapToInt(line -> Arrays.stream(this.parseInts(line.split(""))))
+		.flatMapToInt(String::chars)
+		.map(Character::getNumericValue)
 		.toArray();
 	private int width = this.input[0].length(), height = this.input.length;
 
-	@Override //696
+	@Override @Answer(696)
 	protected long partOne() {
 		return this.aStar(this.cave);
 	}
 
-	@Override //2952
+	@Override @Answer(2952)
 	protected long partTwo() {
 		int width = this.width, height = this.height;
 		this.width *= 5; this.height *= 5;

@@ -1,8 +1,10 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 public class Day2 extends Calendar.Day {
 
-	@Override //2147104
+	@Override @Answer(2147104)
 	protected long partOne() {
 		int horizontal = 0, depth = 0;
 
@@ -17,7 +19,7 @@ public class Day2 extends Calendar.Day {
 		return depth * horizontal;
 	}
 
-	@Override //2044620088
+	@Override @Answer(2044620088)
 	protected long partTwo() {
 		int horizontal = 0, depth = 0, aim = 0;
 

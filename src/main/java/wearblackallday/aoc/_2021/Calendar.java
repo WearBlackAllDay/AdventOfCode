@@ -1,12 +1,26 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.function.ToIntFunction;
 
 public class Calendar {
-	public static void main(String[] args) {
-		new Day15().printResults();
+	public static void main(String[] args) throws NoSuchMethodException {
+		Day day = new Day18();
+
+		Answer answerOne = day.getClass().getDeclaredMethod("partOne").getAnnotation(Answer.class);
+		Answer answerTwo = day.getClass().getDeclaredMethod("partTwo").getAnnotation(Answer.class);
+		long resultOne = day.partOne();
+		long resultTwo = day.partTwo();
+		System.out.println(day.getClass().getSimpleName() + ":");
+
+		System.out.print(resultOne);
+		System.out.println(answerOne == null ? "" : answerOne.value() == resultOne ? "\s(correct)" : "\s(wrong!)");
+
+		System.out.print(resultTwo);
+		System.out.println(answerTwo == null ? "" : answerTwo.value() == resultTwo ? "\s(correct)" : "\s(wrong!)");
 	}
 
 	protected static abstract class Day {
@@ -27,12 +41,6 @@ public class Calendar {
 				ints[i] = parser.applyAsInt(lines[i]);
 			}
 			return ints;
-		}
-
-		public void printResults() {
-			System.out.println(this.getClass().getSimpleName() + ":");
-			System.out.println(this.partOne());
-			System.out.println(this.partTwo());
 		}
 	}
 }

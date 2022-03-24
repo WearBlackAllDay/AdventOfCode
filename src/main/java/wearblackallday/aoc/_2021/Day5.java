@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.Arrays;
 
 import static java.lang.Math.*;
@@ -20,12 +22,12 @@ public class Day5 extends Calendar.Day {
 		this.height = maxY + 1;
 	}
 
-	@Override //4745
+	@Override @Answer(4745)
 	protected long partOne() {
 		return this.countOverlaps(false);
 	}
 
-	@Override //18442
+	@Override @Answer(18442)
 	protected long partTwo() {
 		return this.countOverlaps(true);
 	}

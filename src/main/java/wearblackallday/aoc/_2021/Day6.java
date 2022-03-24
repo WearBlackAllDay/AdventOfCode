@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.Arrays;
 
 public class Day6 extends Calendar.Day {
@@ -16,12 +18,12 @@ public class Day6 extends Calendar.Day {
 		{1, 0, 0, 0, 0, 0, 0, 0, 0},
 	};
 
-	@Override //359344
+	@Override @Answer(359344)
 	protected long partOne() {
 		return populationGrowth(this.population, 80);
 	}
 
-	@Override //1629570219571
+	@Override @Answer(1629570219571L)
 	protected long partTwo() {
 		return populationGrowth(this.population, 256);
 	}

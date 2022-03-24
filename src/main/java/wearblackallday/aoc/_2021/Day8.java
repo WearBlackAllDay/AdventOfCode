@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,7 +11,7 @@ public class Day8 extends Calendar.Day {
 		.toArray(Entry[]::new);
 	private char topLeft, middle, bottomLeft;
 
-	@Override //365
+	@Override @Answer(365)
 	protected long partOne() {
 		int desiredDigits = 0;
 		for(Entry entry : this.entries) {
@@ -22,7 +24,7 @@ public class Day8 extends Calendar.Day {
 		return desiredDigits;
 	}
 
-	@Override //975706
+	@Override @Answer(975706)
 	protected long partTwo() {
 		int sum = 0;
 		for(Entry entry : this.entries) {

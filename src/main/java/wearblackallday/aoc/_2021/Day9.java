@@ -1,6 +1,7 @@
 package wearblackallday.aoc._2021;
 
-import wearblackallday.common.Grid;
+import wearblackallday.aoc.common.Answer;
+import wearblackallday.aoc.common.Grid;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ public class Day9 extends Calendar.Day implements Grid {
 		.map(Character::getNumericValue)
 		.toArray();
 
-	@Override //425
+	@Override @Answer(425)
 	protected long partOne() {
 		int[] riskLevel = {0};
 		this.forEach((x, y) -> {
@@ -19,7 +20,7 @@ public class Day9 extends Calendar.Day implements Grid {
 		return riskLevel[0];
 	}
 
-	@Override //1135260
+	@Override @Answer(1135260)
 	protected long partTwo() {
 		BitSet basinMap = new BitSet(this.size());
 		List<Integer> basins = new ArrayList<>();

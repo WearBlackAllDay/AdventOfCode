@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.*;
 
 public class Day4 extends Calendar.Day {
@@ -18,7 +20,7 @@ public class Day4 extends Calendar.Day {
 		}
 	}
 
-	@Override //8136
+	@Override @Answer(8136)
 	protected long partOne() {
 		for(int roll : this.rolls) {
 			for(int[] board : this.boards) {
@@ -31,7 +33,7 @@ public class Day4 extends Calendar.Day {
 		return -1;
 	}
 
-	@Override //12738
+	@Override @Answer(12738)
 	protected long partTwo() {
 		for(int roll : this.rolls) {
 			this.boards.forEach(board -> mark(roll, board));

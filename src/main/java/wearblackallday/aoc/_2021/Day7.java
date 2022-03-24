@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.common.Answer;
+
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 
@@ -13,8 +15,8 @@ public class Day7 extends Calendar.Day {
 		this.max = stats.getMax();
 	}
 
-	@Override
-	protected long partOne() { //353800
+	@Override @Answer(353800)
+	protected long partOne() {
 		int lowestCost = Integer.MAX_VALUE;
 		for(int horizontal = this.min; horizontal <= this.max; horizontal++) {
 			int fuelCost = 0;
@@ -26,7 +28,7 @@ public class Day7 extends Calendar.Day {
 		return lowestCost;
 	}
 
-	@Override //98119739
+	@Override @Answer(98119739)
 	protected long partTwo() {
 		int lowestCost = Integer.MAX_VALUE;
 		for(int horizontal = this.min; horizontal <= this.max; horizontal++) {
