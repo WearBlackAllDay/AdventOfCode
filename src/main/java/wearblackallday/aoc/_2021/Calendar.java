@@ -2,11 +2,16 @@ package wearblackallday.aoc._2021;
 
 import wearblackallday.aoc.common.Answer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.function.ToIntFunction;
 
 public class Calendar {
+	private static final String ANSI_RESET = "\u001B[0m";
+	private static final String ANSI_RED = "\u001B[31m";
+	private static final String ANSI_GREEN = "\u001B[32m";
+	private static final String ANSI_YELLOW = "\u001B[33m";
+	private static final String ANSI_BLUE = "\u001B[34m";
+
 	public static void main(String[] args) throws NoSuchMethodException {
 		Day day = new Day18();
 
@@ -14,13 +19,17 @@ public class Calendar {
 		Answer answerTwo = day.getClass().getDeclaredMethod("partTwo").getAnnotation(Answer.class);
 		long resultOne = day.partOne();
 		long resultTwo = day.partTwo();
-		System.out.println(day.getClass().getSimpleName() + ":");
+		System.out.println(ANSI_YELLOW + day.getClass().getSimpleName() + ':' + ANSI_RESET);
 
-		System.out.print(resultOne);
-		System.out.println(answerOne == null ? "" : answerOne.value() == resultOne ? "\s(correct)" : "\s(wrong!)");
+		System.out.print(ANSI_BLUE  + resultOne + ANSI_RESET);
+		System.out.println(answerOne == null ? "" : answerOne.value() == resultOne
+			? ANSI_GREEN + "\s(correct)" + ANSI_RESET
+			: ANSI_RED + "\s(wrong!)" + ANSI_RESET);
 
-		System.out.print(resultTwo);
-		System.out.println(answerTwo == null ? "" : answerTwo.value() == resultTwo ? "\s(correct)" : "\s(wrong!)");
+		System.out.print(ANSI_BLUE  + resultTwo + ANSI_RESET);
+		System.out.println(answerTwo == null ? "" : answerTwo.value() == resultTwo
+			? ANSI_GREEN + "\s(correct)" + ANSI_RESET
+			: ANSI_RED + "\s(wrong!)" + ANSI_RESET);
 	}
 
 	protected static abstract class Day {

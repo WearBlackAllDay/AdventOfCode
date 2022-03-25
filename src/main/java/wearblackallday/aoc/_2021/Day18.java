@@ -3,13 +3,8 @@ package wearblackallday.aoc._2021;
 import wearblackallday.aoc.common.Answer;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Day18 extends Calendar.Day {
-
-	private final SnailFishNumber[] numbers = Arrays.stream(this.input)
-		.map(SnailFishNumber::valueOf)
-		.toArray(SnailFishNumber[]::new);
 
 	@Override @Answer(4173)
 	protected long partOne() {
@@ -20,14 +15,15 @@ public class Day18 extends Calendar.Day {
 			.orElse(-1);
 	}
 
-	@Override
+	@Override @Answer(4706)
 	protected long partTwo() {
 		int max = 0;
-		for(SnailFishNumber number : this.numbers) {
-			for(SnailFishNumber otherNumber : this.numbers) {
-				if(number == otherNumber) continue;
-				max = Math.max(max, number.add(otherNumber).magnitude());
-				max = Math.max(max, otherNumber.add(number).magnitude());
+		for(String outer : this.input) {
+			for(String inner : this.input) {
+				if(outer.equals(inner)) continue;
+				SnailFishNumber first = SnailFishNumber.valueOf(outer);
+				SnailFishNumber second = SnailFishNumber.valueOf(inner);
+				max = Math.max(max, first.add(second).magnitude());
 			}
 		}
 		return max;
@@ -40,17 +36,26 @@ public class Day18 extends Calendar.Day {
 		else parent.right = newNumber;
 	}
 
-	private static abstract class SnailFishNumber {
+	private static abstract sealed class SnailFishNumber permits SnailFishNumberRegular, SnailFishNumberPair {
 		protected SnailFishNumberPair parent;
 
 		protected abstract int magnitude();
+
+		protected abstract boolean explode();
+
+		protected abstract boolean split();
+
+		protected abstract SnailFishNumberRegular numberOnSide(boolean leftSide);
+
+		protected abstract Optional<SnailFishNumberRegular> firstNumberToSide(boolean leftSide, SnailFishNumber source);
 
 		private static SnailFishNumber valueOf(String number) {
 			Deque<SnailFishNumber> stack = new ArrayDeque<>();
 			for(int i = 0; i < number.length(); i++) {
 				char c = number.charAt(i);
 				switch(c) {
-					case ',', ' ', '[' -> {}
+					case ',', ' ', '[' -> {
+					}
 					case ']' -> {
 						SnailFishNumber right = stack.poll();
 						stack.push(new SnailFishNumberPair(stack.poll(), right));
@@ -69,49 +74,11 @@ public class Day18 extends Calendar.Day {
 
 		private void reduce() {
 			do {
-				while(this.explode());
+				while(this.explode()) ;
 			} while(this.split());
 		}
 
-		private boolean explode() {
-			Optional<SnailFishNumberPair> leftMostNested = this.stream()
-				.filter(SnailFishNumberPair.class::isInstance)
-				.filter(number -> number.depth() >= 4)
-				.findFirst()
-				.map(SnailFishNumberPair.class::cast);
-
-			leftMostNested.ifPresent(pair -> {
-				pair.firstNumberToSide(true, pair.left)
-					.ifPresent(left -> left.value += pair.left.magnitude());
-
-				pair.firstNumberToSide(false, pair.right)
-					.ifPresent(right -> right.value += pair.right.magnitude());
-
-				replace(pair, new SnailFishNumberRegular(0));
-			});
-
-			return leftMostNested.isPresent();
-		}
-
-		private boolean split() {
-			Optional<SnailFishNumberRegular> bigRegular = this.stream()
-				.filter(number -> number instanceof SnailFishNumberRegular regular && regular.value >= 10)
-				.findFirst()
-				.map(SnailFishNumberRegular.class::cast);
-
-			bigRegular.ifPresent(regular -> {
-				SnailFishNumber split = new SnailFishNumberPair(
-					new SnailFishNumberRegular(regular.value >> 1),
-					new SnailFishNumberRegular((regular.value + 1) >> 1)
-				);
-
-				replace(regular, split);
-			});
-
-			return bigRegular.isPresent();
-		}
-
-		private int depth() {
+		protected int depth() {
 			int depth = 0;
 			SnailFishNumberPair parent = this.parent;
 			while(parent != null) {
@@ -120,19 +87,18 @@ public class Day18 extends Calendar.Day {
 			}
 			return depth;
 		}
-
-		protected Stream<SnailFishNumber> stream() {
-			if(this instanceof SnailFishNumberPair pair)
-				return Stream.concat(Stream.of(pair), Stream.of(pair.left, pair.right).flatMap(SnailFishNumber::stream));
-			else return Stream.of(this);
-		}
 	}
 
-	private static class SnailFishNumberRegular extends SnailFishNumber {
+	private static final class SnailFishNumberRegular extends SnailFishNumber {
 		private int value;
 
 		private SnailFishNumberRegular(int value) {
 			this.value = value;
+		}
+
+		@Override
+		public String toString() {
+			return String.valueOf(this.value);
 		}
 
 		@Override
@@ -141,16 +107,45 @@ public class Day18 extends Calendar.Day {
 		}
 
 		@Override
-		public String toString() {
-			return String.valueOf(this.value);
+		protected boolean explode() {
+			if(this.parent.depth() < 4) return false;
+
+			this.parent.firstNumberToSide(true, this.parent.left)
+				.ifPresent(left -> left.value += this.parent.left.magnitude());
+
+			this.parent.firstNumberToSide(false, this.parent.right)
+				.ifPresent(right -> right.value += this.parent.right.magnitude());
+
+			replace(this.parent, new SnailFishNumberRegular(0));
+			return true;
+		}
+
+		@Override
+		protected boolean split() {
+			if(this.value < 10) return false;
+
+			replace(this, new SnailFishNumberPair(
+				new SnailFishNumberRegular(this.value >> 1),
+				new SnailFishNumberRegular((this.value + 1) >> 1)));
+			return true;
+		}
+
+		@Override
+		protected SnailFishNumberRegular numberOnSide(boolean leftSide) {
+			return this;
+		}
+
+		@Override
+		protected Optional<SnailFishNumberRegular> firstNumberToSide(boolean leftSide, SnailFishNumber source) {
+			return Optional.of(this);
 		}
 	}
 
-	private static class SnailFishNumberPair extends SnailFishNumber {
+	private static final class SnailFishNumberPair extends SnailFishNumber {
 
 		private SnailFishNumber left, right;
 
-		public SnailFishNumberPair(SnailFishNumber left, SnailFishNumber right) {
+		private SnailFishNumberPair(SnailFishNumber left, SnailFishNumber right) {
 			this.left = left;
 			this.left.parent = this;
 
@@ -158,22 +153,9 @@ public class Day18 extends Calendar.Day {
 			this.right.parent = this;
 		}
 
-		private SnailFishNumberRegular numberOnSide(boolean leftSide) {
-			SnailFishNumber sideChild = leftSide ? this.left : this.right;
-			return sideChild instanceof SnailFishNumberPair pair
-				? pair.numberOnSide(leftSide)
-				: (SnailFishNumberRegular)sideChild;
-		}
-
-		private Optional<SnailFishNumberRegular> firstNumberToSide(boolean leftSide, SnailFishNumber source) {
-			SnailFishNumber sideChild = leftSide ? this.left : this.right;
-			if(sideChild == source) {
-				if(this.parent == null) return Optional.empty();
-				else return this.parent.firstNumberToSide(leftSide, this);
-			} else {
-				if(sideChild instanceof SnailFishNumberRegular regular) return Optional.of(regular);
-				else return Optional.of(((SnailFishNumberPair)sideChild).numberOnSide(!leftSide)); //switch side
-			}
+		@Override
+		public String toString() {
+			return '[' + this.left.toString() + ',' + this.right.toString() + ']';
 		}
 
 		@Override
@@ -182,8 +164,30 @@ public class Day18 extends Calendar.Day {
 		}
 
 		@Override
-		public String toString() {
-			return '[' + this.left.toString() + ',' + this.right.toString() + ']';
+		protected boolean explode() {
+			return this.left.explode() || this.right.explode();
+		}
+
+		@Override
+		protected boolean split() {
+			return this.left.split() || this.right.split();
+		}
+
+		@Override
+		protected SnailFishNumberRegular numberOnSide(boolean leftSide) {
+			return leftSide ? this.left.numberOnSide(leftSide) : this.right.numberOnSide(leftSide);
+		}
+
+		@Override
+		protected Optional<SnailFishNumberRegular> firstNumberToSide(boolean leftSide, SnailFishNumber source) {
+			SnailFishNumber sideChild = leftSide ? this.left : this.right;
+			if(sideChild == source && this.parent == null) {
+				return Optional.empty();
+			} else if(sideChild == source) {
+				return this.parent.firstNumberToSide(leftSide, this);
+			} else {
+				return Optional.of(sideChild.numberOnSide(!leftSide)); //switch side
+			}
 		}
 	}
 }
