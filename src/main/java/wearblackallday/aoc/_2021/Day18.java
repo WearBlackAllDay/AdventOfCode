@@ -21,19 +21,10 @@ public class Day18 extends Calendar.Day {
 		for(String outer : this.input) {
 			for(String inner : this.input) {
 				if(outer.equals(inner)) continue;
-				SnailFishNumber first = SnailFishNumber.valueOf(outer);
-				SnailFishNumber second = SnailFishNumber.valueOf(inner);
-				max = Math.max(max, first.add(second).magnitude());
+				max = Math.max(max, SnailFishNumber.valueOf(outer).add(SnailFishNumber.valueOf(inner)).magnitude());
 			}
 		}
 		return max;
-	}
-
-	private static void replace(SnailFishNumber oldNumber, SnailFishNumber newNumber) {
-		SnailFishNumberPair parent = oldNumber.parent;
-		newNumber.parent = parent;
-		if(parent.left == oldNumber) parent.left = newNumber;
-		else parent.right = newNumber;
 	}
 
 	private static abstract sealed class SnailFishNumber permits SnailFishNumberRegular, SnailFishNumberPair {
@@ -87,6 +78,12 @@ public class Day18 extends Calendar.Day {
 			}
 			return depth;
 		}
+
+		protected void replaceWith(SnailFishNumber otherNumber) {
+			otherNumber.parent = this.parent;
+			if(this.parent.left == this) this.parent.left = otherNumber;
+			else this.parent.right = otherNumber;
+		}
 	}
 
 	private static final class SnailFishNumberRegular extends SnailFishNumber {
@@ -116,7 +113,7 @@ public class Day18 extends Calendar.Day {
 			this.parent.firstNumberToSide(false, this.parent.right)
 				.ifPresent(right -> right.value += this.parent.right.magnitude());
 
-			replace(this.parent, new SnailFishNumberRegular(0));
+			this.parent.replaceWith(new SnailFishNumberRegular(0));
 			return true;
 		}
 
@@ -124,7 +121,7 @@ public class Day18 extends Calendar.Day {
 		protected boolean split() {
 			if(this.value < 10) return false;
 
-			replace(this, new SnailFishNumberPair(
+			this.replaceWith(new SnailFishNumberPair(
 				new SnailFishNumberRegular(this.value >> 1),
 				new SnailFishNumberRegular((this.value + 1) >> 1)));
 			return true;

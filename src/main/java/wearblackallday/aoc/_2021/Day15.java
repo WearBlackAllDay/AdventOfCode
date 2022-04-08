@@ -34,7 +34,7 @@ public class Day15 extends Calendar.Day implements Grid {
 
 	private int aStar(int[] cave) {
 		BitSet closed = new BitSet(this.size());
-		Queue<Node> open = new PriorityQueue<>(Comparator.comparingInt(node -> node.cost + node.distance));
+		Queue<Node> open = new PriorityQueue<>(Comparator.comparingInt((Node node) -> node.cost + node.distance).reversed());
 		open.add(new Node(0, 0, 0, Integer.MAX_VALUE));
 
 		while(true) {

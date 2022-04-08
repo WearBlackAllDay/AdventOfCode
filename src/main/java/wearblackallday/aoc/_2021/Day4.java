@@ -3,6 +3,7 @@ package wearblackallday.aoc._2021;
 import wearblackallday.aoc.common.Answer;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Day4 extends Calendar.Day {
 	private final int[] rolls = this.parseInts(this.input[0].split(","));
@@ -11,7 +12,7 @@ public class Day4 extends Calendar.Day {
 	public Day4() {
 		int[] all = Arrays.stream(this.input)
 			.skip(1)
-			.filter(line -> !line.isEmpty())
+			.filter(Predicate.not(String::isEmpty))
 			.flatMapToInt(line -> Arrays.stream(this.parseInts(line.trim().split("\s+"))))
 			.toArray();
 

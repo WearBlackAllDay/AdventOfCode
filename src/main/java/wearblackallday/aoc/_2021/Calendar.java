@@ -13,7 +13,7 @@ public class Calendar {
 	private static final String ANSI_BLUE = "\u001B[34m";
 
 	public static void main(String[] args) throws NoSuchMethodException {
-		Day day = new Day18();
+		Day day = new Day21();
 
 		Answer answerOne = day.getClass().getDeclaredMethod("partOne").getAnnotation(Answer.class);
 		Answer answerTwo = day.getClass().getDeclaredMethod("partTwo").getAnnotation(Answer.class);
@@ -33,7 +33,7 @@ public class Calendar {
 	}
 
 	protected static abstract class Day {
-		protected String[] input = new BufferedReader(new InputStreamReader(
+		protected final String[] input = new BufferedReader(new InputStreamReader(
 			Calendar.class.getResourceAsStream("/input/2021/" + this.getClass().getSimpleName().toLowerCase())))
 			.lines().toArray(String[]::new);
 
