@@ -54,7 +54,7 @@ public class Day8 extends Calendar.Day {
 	}
 
 	private static String subtract(String target, String mask) {
-		return target.replaceAll(String.join("|", mask.split("")), "");
+		return target.replaceAll("[" + mask + "]+", "");
 	}
 
 	private int readDigit(String digit) {

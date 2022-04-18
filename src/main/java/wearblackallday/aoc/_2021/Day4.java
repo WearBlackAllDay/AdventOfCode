@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 public class Day4 extends Calendar.Day {
 	private final int[] rolls = this.parseInts(this.input[0].split(","));
-	private final List<int[]> boards = new ArrayList<>();
+	private final List<BingoBoard> boards = new ArrayList<>();
 
 	public Day4() {
 		int[] all = Arrays.stream(this.input)
@@ -17,18 +17,16 @@ public class Day4 extends Calendar.Day {
 			.toArray();
 
 		for(int i = 0; i < all.length; i += 25) {
-			this.boards.add(Arrays.copyOfRange(all, i, i + 25));
+			this.boards.add(new BingoBoard(Arrays.copyOfRange(all, i, i + 25)));
 		}
 	}
 
 	@Override @Answer(8136)
 	protected long partOne() {
 		for(int roll : this.rolls) {
-			for(int[] board : this.boards) {
-				mark(roll, board);
-				if(hasBingo(board)) {
-					return winnerSum(roll, board);
-				}
+			for(BingoBoard board : this.boards) {
+				board.mark(roll);
+				if(board.hasBingo()) return board.winnerSum(roll);
 			}
 		}
 		return -1;
@@ -37,52 +35,56 @@ public class Day4 extends Calendar.Day {
 	@Override @Answer(12738)
 	protected long partTwo() {
 		for(int roll : this.rolls) {
-			this.boards.forEach(board -> mark(roll, board));
-			if(this.boards.size() == 1 && hasBingo(this.boards.get(0))) return winnerSum(roll, this.boards.get(0));
-			this.boards.removeIf(Day4::hasBingo);
+			this.boards.forEach(board -> board.mark(roll));
+			if(this.boards.size() == 1 && this.boards.get(0).hasBingo()) return this.boards.get(0).winnerSum(roll);
+			this.boards.removeIf(BingoBoard::hasBingo);
 		}
 		return -1;
 	}
 
-	private static void mark(int roll, int[] board) {
-		for(int i = 0; i < board.length; i++) {
-			if(board[i] == roll) {
-				board[i] |= 1 << 31;
-				return;
-			}
-		}
-	}
-
-	private static boolean hasBingo(int[] board) {
-		for(int i = 0; i < 5; i++) {
-			boolean wonRow = true, wonCol = true;
-			for(int row = 0; row < 5; row++) {
-				if(board[toIndex(row, i)] >>> 31 == 0) {
-					wonRow = false;
-					break;
+	private record BingoBoard(int[] board) {
+		private void mark(int roll) {
+			for(int i = 0; i < this.board.length; i++) {
+				if(this.board[i] == roll) {
+					this.board[i] |= Integer.MIN_VALUE;
+					return;
 				}
 			}
-			if(wonRow) return true;
-			for(int col = 0; col < 5; col++) {
-				if(board[toIndex(i, col)] >>> 31 == 0) {
-					wonCol = false;
-					break;
-				}
+		}
+
+		private boolean isMarked(int x, int y) {
+			return this.board[y + 5 * x] >>> 31 == 1;
+		}
+
+		private boolean hasBingo() {
+			boolean wonRow = false, wonCol = false;
+			for(int i = 0; i < 5 && !wonRow && !wonCol; i++) {
+				wonRow = this.checkRow(i);
+				wonCol = this.checkCol(i);
 			}
-			if(wonCol) return true;
+			return wonRow || wonCol;
 		}
-		return false;
-	}
 
-	private static int winnerSum(int winnerRoll, int[] winnerBoard) {
-		int sum = 0;
-		for(int entry : winnerBoard) {
-			if(entry >>> 31 == 0) sum += entry;
+		private boolean checkRow(int row) {
+			for(int i = 0; i < 5; i++) {
+				if(!this.isMarked(row, i)) return false;
+			}
+			return true;
 		}
-		return sum * winnerRoll;
-	}
 
-	private static int toIndex(int x, int y) {
-		return y + 5 * x;
+		private boolean checkCol(int col) {
+			for(int i = 0; i < 5; i++) {
+				if(!this.isMarked(i, col)) return false;
+			}
+			return true;
+		}
+
+		private int winnerSum(int winnerRoll) {
+			int sum = 0;
+			for(int entry : this.board) {
+				if(entry >>> 31 == 0) sum += entry;
+			}
+			return sum * winnerRoll;
+		}
 	}
 }
