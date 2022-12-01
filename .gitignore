@@ -20,8 +20,7 @@ gradle-app.setting
 src/test/java/
 
 src/main/java/wearblackallday/aoc/_2020
-src/main/resources/input/**
-
+src/main/resources
 
 src/main/java/wearblackallday/aoc/_2021/Day16.java
 src/main/java/wearblackallday/aoc/_2021/Day20.java
@@ -30,4 +29,3 @@ src/main/java/wearblackallday/aoc/_2021/Day22.java
 src/main/java/wearblackallday/aoc/_2021/Day23.java
 src/main/java/wearblackallday/aoc/_2021/Day24.java
 src/main/java/wearblackallday/aoc/_2021/Day25.java
-
