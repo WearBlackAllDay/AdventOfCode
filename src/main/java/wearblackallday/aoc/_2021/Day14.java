@@ -1,5 +1,6 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.Calendar;
 import wearblackallday.aoc.common.Answer;
 
 import java.util.*;
@@ -7,28 +8,29 @@ import java.util.stream.Collectors;
 import static wearblackallday.aoc._2021.Day6.*;
 
 public class Day14 extends Calendar.Day {
-	private final Map<Pair, PairPair> rules = Arrays.stream(this.input)
+	private final Map<String, Character> rules = Arrays.stream(this.input)
 		.skip(2)
-		.collect(Collectors.toMap(Pair::new, PairPair::new));
+		.collect(Collectors.toMap(line -> line.substring(0, 2), line -> line.charAt(line.length() - 1)));
 
-	private final Map<Pair, Integer> indexMap = new HashMap<>(this.rules.size());
+	private final Map<String, Integer> indexMap = new HashMap<>(this.rules.size());
 	private final long[][] transitionMatrix = new long[this.rules.size()][this.rules.size()];
 	private final long[] startVector = new long[this.rules.size()];
 
 	protected Day14() {
-		Iterator<Pair> possiblePairs = this.rules.keySet().iterator();
+		Iterator<String> possiblePairs = this.rules.keySet().iterator();
 		for(int i = 0; i < this.rules.size(); i++) {
 			this.indexMap.put(possiblePairs.next(), i);
 		}
 
 		for(var pairIndex : this.indexMap.entrySet()) {
-			PairPair mapping = this.rules.get(pairIndex.getKey());
-			this.transitionMatrix[this.indexMap.get(mapping.left)][pairIndex.getValue()] = 1;
-			this.transitionMatrix[this.indexMap.get(mapping.right)][pairIndex.getValue()] = 1;
+			String pair1 = "" + pairIndex.getKey().charAt(0) + this.rules.get(pairIndex.getKey());
+			String pair2 = "" + this.rules.get(pairIndex.getKey()) + pairIndex.getKey().charAt(1);
+			this.transitionMatrix[this.indexMap.get(pair1)][pairIndex.getValue()] = 1;
+			this.transitionMatrix[this.indexMap.get(pair2)][pairIndex.getValue()] = 1;
 		}
 
 		for(int i = 0; i < this.input[0].length() - 1; i++) {
-			Pair pair = new Pair(this.input[0].charAt(i), this.input[0].charAt(i + 1));
+			String pair = this.input[0].substring(i, i + 2);
 			this.startVector[this.indexMap.get(pair)]++;
 		}
 	}
@@ -46,27 +48,12 @@ public class Day14 extends Calendar.Day {
 	private long buildPolymer(int steps) {
 		long[] distribution = matrixVectorProduct(matrixPower(this.transitionMatrix, steps), this.startVector);
 
-		Map<Character, Long> frequency = new HashMap<>();
-
-		for(var pairIndex : this.indexMap.entrySet()) {
-			frequency.merge(pairIndex.getKey().right, distribution[pairIndex.getValue()], Long::sum);
-		}
-
-		LongSummaryStatistics statistics = frequency.values().stream()
+		LongSummaryStatistics statistics = this.indexMap.entrySet().stream()
+			.collect(Collectors.groupingBy(e -> e.getKey().charAt(1), Collectors.summingLong(e -> distribution[e.getValue()])))
+			.values().stream()
 			.mapToLong(Long::longValue)
 			.summaryStatistics();
 
 		return statistics.getMax() - statistics.getMin();
-	}
-
-	private record Pair(char left, char right) {
-		private Pair(String line) {
-			this(line.charAt(0), line.charAt(1));
-		}
-	}
-	private record PairPair(Pair left, Pair right) {
-		private PairPair(String line) {
-			this(new Pair(line.charAt(0), line.charAt(6)), new Pair(line.charAt(6), line.charAt(1)));
-		}
 	}
 }

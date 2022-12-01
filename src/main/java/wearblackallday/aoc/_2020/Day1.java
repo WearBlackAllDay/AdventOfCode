@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2020;
 
+import wearblackallday.aoc.Calendar;
+
 public class Day1 extends Calendar.Day {
 	private final int[] numbers = this.parseInts(this.input);
 

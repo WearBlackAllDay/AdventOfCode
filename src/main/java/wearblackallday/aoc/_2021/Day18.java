@@ -1,5 +1,6 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.Calendar;
 import wearblackallday.aoc.common.Answer;
 
 import java.util.*;
@@ -71,10 +72,8 @@ public class Day18 extends Calendar.Day {
 
 		protected int depth() {
 			int depth = 0;
-			SnailFishNumberPair parent = this.parent;
-			while(parent != null) {
+			for(SnailFishNumber number = this.parent; number != null; number = number.parent) {
 				depth++;
-				parent = parent.parent;
 			}
 			return depth;
 		}

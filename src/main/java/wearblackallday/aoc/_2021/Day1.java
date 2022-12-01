@@ -1,5 +1,6 @@
 package wearblackallday.aoc._2021;
 
+import wearblackallday.aoc.Calendar;
 import wearblackallday.aoc.common.Answer;
 
 public class Day1 extends Calendar.Day {

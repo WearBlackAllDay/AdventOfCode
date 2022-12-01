@@ -1,5 +1,6 @@
-package wearblackallday.aoc._2021;
+package wearblackallday.aoc;
 
+import wearblackallday.aoc._2022.*;
 import wearblackallday.aoc.common.Answer;
 
 import java.io.*;
@@ -12,29 +13,30 @@ public class Calendar {
 	private static final String ANSI_YELLOW = "\u001B[33m";
 	private static final String ANSI_BLUE = "\u001B[34m";
 
-	public static void main(String[] args) throws NoSuchMethodException {
-		Day day = new Day21();
+	public static void main(String[] args) throws NoSuchMethodException, IOException {
+		Day day = new Day1();
 
-		Answer answerOne = day.getClass().getDeclaredMethod("partOne").getAnnotation(Answer.class);
-		Answer answerTwo = day.getClass().getDeclaredMethod("partTwo").getAnnotation(Answer.class);
-		long resultOne = day.partOne();
-		long resultTwo = day.partTwo();
 		System.out.println(ANSI_YELLOW + day.getClass().getSimpleName() + ':' + ANSI_RESET);
 
-		System.out.print(ANSI_BLUE  + resultOne + ANSI_RESET);
-		System.out.println(answerOne == null ? "" : answerOne.value() == resultOne
-			? ANSI_GREEN + "\s(correct)" + ANSI_RESET
-			: ANSI_RED + "\s(wrong!)" + ANSI_RESET);
+		printAnswer(day.partOne(), day.getClass().getDeclaredMethod("partOne").getAnnotation(Answer.class));
+		printAnswer(day.partTwo(), day.getClass().getDeclaredMethod("partTwo").getAnnotation(Answer.class));
+	}
 
-		System.out.print(ANSI_BLUE  + resultTwo + ANSI_RESET);
-		System.out.println(answerTwo == null ? "" : answerTwo.value() == resultTwo
+	private static void printAnswer(long result, Answer correctAnswer) {
+		System.out.print(ANSI_BLUE  + result + ANSI_RESET);
+		System.out.println(correctAnswer == null ? "" : correctAnswer.value() == result
 			? ANSI_GREEN + "\s(correct)" + ANSI_RESET
 			: ANSI_RED + "\s(wrong!)" + ANSI_RESET);
 	}
 
-	protected static abstract class Day {
+	public static abstract class Day {
+		private final String filePath = "/input/"
+			+ this.getClass().getPackage().getName().substring(21)
+			+ "/"
+			+ this.getClass().getSimpleName().toLowerCase();
+
 		protected final String[] input = new BufferedReader(new InputStreamReader(
-			Calendar.class.getResourceAsStream("/input/2021/" + this.getClass().getSimpleName().toLowerCase())))
+			Calendar.class.getResourceAsStream(this.filePath)))
 			.lines().toArray(String[]::new);
 
 		protected abstract long partOne();

@@ -1,5 +1,7 @@
 package wearblackallday.aoc._2020;
 
+import wearblackallday.aoc.Calendar;
+
 import java.util.Arrays;
 import java.util.function.BiPredicate;
 
