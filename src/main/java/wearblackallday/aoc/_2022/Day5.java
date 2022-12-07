@@ -61,12 +61,10 @@ public class Day5 extends Calendar.Day {
 	}
 
 	private static void printStacks(Deque<Character>[] stacks) {
-		String message = Arrays.stream(stacks)
-			.map(Deque::getFirst)
-			.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-			.toString();
-
-		System.out.println(message);
+		for(Deque<Character> stack : stacks) {
+			System.out.print(stack.getFirst());
+		}
+		System.out.println();
 	}
 
 	private record Instruction(int quantity, int fromIndex, int toIndex) {

@@ -14,7 +14,7 @@ public class Calendar {
 	private static final String ANSI_BLUE = "\u001B[34m";
 
 	public static void main(String[] args) throws NoSuchMethodException, IOException {
-		Day day = new Day5();
+		Day day = new Day7();
 
 		System.out.println(ANSI_YELLOW + day.getClass().getSimpleName() + ':' + ANSI_RESET);
 
